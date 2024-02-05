@@ -1,0 +1,15 @@
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\bin\Debug\net6.0\CMDMyFuckingMonitors.exe
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\bin\Debug\net6.0\CMDMyFuckingMonitors.deps.json
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\bin\Debug\net6.0\CMDMyFuckingMonitors.runtimeconfig.json
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\bin\Debug\net6.0\CMDMyFuckingMonitors.dll
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\bin\Debug\net6.0\CMDMyFuckingMonitors.pdb
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.csproj.AssemblyReference.cache
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.AssemblyInfoInputs.cache
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.AssemblyInfo.cs
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.csproj.CoreCompileInputs.cache
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.dll
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\refint\CMDMyFuckingMonitors.dll
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.pdb
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\CMDMyFuckingMonitors.genruntimeconfig.cache
+C:\Users\Bake\source\repos\FixMyFuckingMonitors\CMDMyFuckingMonitors\obj\Debug\net6.0\ref\CMDMyFuckingMonitors.dll
