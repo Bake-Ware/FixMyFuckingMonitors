@@ -1,0 +1,24 @@
+﻿<Window x:Class="FixMyFuckingMonitors.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FixMyFuckingMonitors"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="543">
+    <Grid>
+        <ListBox x:Name="MonitorsBox" ItemsSource="{Binding Monitors, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}" Margin="0,0,0,49">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding MonNum}" VerticalAlignment="Center" Width="50"/>
+                        <TextBox Text="{Binding Xpos}" Margin="5,0,0,0" Width="200"/>
+                        <TextBox Text="{Binding Ypos}" Margin="5,0,0,0" Width="200"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Save" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" RenderTransformOrigin="-2.421,-0.075" Click="Button_Click"/>
+
+    </Grid>
+</Window>
