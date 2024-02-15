@@ -8,4 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = FixMyFuckingMonitors
-build_property.ProjectDir = C:\Users\Bake\source\repos\FixMyFuckingMonitors\FixMyFuckingMonitors\
+build_property.ProjectDir = C:\Users\123\Documents\GitHub\FixMyFuckingMonitors\FixMyFuckingMonitors\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

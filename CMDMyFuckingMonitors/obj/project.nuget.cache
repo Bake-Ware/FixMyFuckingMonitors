@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "eGZHKLBDcmKDAbprb7We/FWZ0yPT9MiG+JchCzszH+Hc1fOzWrvVkctVEdGSJXz1MlEFShbpXNhtNPx1f6j6IQ==",
+  "dgSpecHash": "vFWiZLF5D422m47A1oIK7UZtAiOkEnwqY5RXIf0RBKZA2sjTOBOQg12cZ7R6MD8misWeYpNFJSO4l6zZw7281g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bake\\source\\repos\\FixMyFuckingMonitors\\CMDMyFuckingMonitors\\CMDMyFuckingMonitors.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\123\\Documents\\GitHub\\FixMyFuckingMonitors\\CMDMyFuckingMonitors\\CMDMyFuckingMonitors.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\123\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.26\\microsoft.windowsdesktop.app.ref.6.0.26.nupkg.sha512",
+    "C:\\Users\\123\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.26\\microsoft.netcore.app.ref.6.0.26.nupkg.sha512",
+    "C:\\Users\\123\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.26\\microsoft.aspnetcore.app.ref.6.0.26.nupkg.sha512",
+    "C:\\Users\\123\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.26\\microsoft.netcore.app.host.win-x64.6.0.26.nupkg.sha512"
+  ],
   "logs": []
 }

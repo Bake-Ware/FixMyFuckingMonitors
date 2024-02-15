@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CMDMyFuckingMonitors")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d9f03b86812a260ff1f40b5ecd7fdc35698806cb")]
 [assembly: System.Reflection.AssemblyProductAttribute("CMDMyFuckingMonitors")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CMDMyFuckingMonitors")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
