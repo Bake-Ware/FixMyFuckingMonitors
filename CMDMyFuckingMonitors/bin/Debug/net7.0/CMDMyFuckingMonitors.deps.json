@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "CMDMyFuckingMonitors/1.0.0": {
+        "dependencies": {
+          "LibMyFuckingMonitors": "1.0.0"
+        },
+        "runtime": {
+          "CMDMyFuckingMonitors.dll": {}
+        }
+      },
+      "LibMyFuckingMonitors/1.0.0": {
+        "runtime": {
+          "LibMyFuckingMonitors.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CMDMyFuckingMonitors/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LibMyFuckingMonitors/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

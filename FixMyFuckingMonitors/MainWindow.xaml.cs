@@ -15,6 +15,13 @@ using System.Windows.Shapes;
 //using PInvoke;
 using System;
 using System.Runtime.InteropServices;
+using static LibMyFuckingMonitors.MonitorService;
+using LibMyFuckingMonitors;
+using System.Windows.Ink;
+using System.Drawing;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Windows.Controls.Ribbon.Primitives;
 
 namespace FixMyFuckingMonitors
 {
@@ -23,295 +30,201 @@ namespace FixMyFuckingMonitors
     /// </summary>
     public partial class MainWindow : Window
     {
-        public class Monitor
-        { 
-            public uint MonNum { get; set; }
-            public int Xpos { get; set; }
-            public int Ypos { get; set; }
-        }
-        public static List<Monitor> Monitors { get; set; } = new List<Monitor>();
-
+        public static List<MonitorModel> Monitors { get; set; } = new List<MonitorModel>();
+        public static int Zoom = 10;
+        public static int SelectedMonitor = -1;
         public MainWindow()
         {
             InitializeComponent();
-            GetMonitorOffsets();
-            MonitorsBox.ItemsSource = Monitors;
+            RefreshCanvas();
         }
 
-        public static void SetMonitorOffsets(uint monitorId, int x, int y)
+        private void Grid_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var device = new DISPLAY_DEVICE();
-            var deviceMode = new DEVMODE();
-            device.cb = Marshal.SizeOf(device);
-
-            NativeMethods.EnumDisplayDevices(null, monitorId, ref device, 0);
-            NativeMethods.EnumDisplaySettings(device.DeviceName, -1, ref deviceMode);
-            var offsetx = deviceMode.dmPosition.x;
-            var offsety = deviceMode.dmPosition.y;
-            Console.WriteLine($"Current x: {offsetx} - New x: {x}");
-            Console.WriteLine($"Current y: {offsety} - New y: {y}");
-            deviceMode.dmPosition.x = x;
-            deviceMode.dmPosition.y = y;
-
-            NativeMethods.ChangeDisplaySettingsEx(
-                device.DeviceName,
-                ref deviceMode,
-                (IntPtr)null,
-                (ChangeDisplaySettingsFlags.CDS_UPDATEREGISTRY | ChangeDisplaySettingsFlags.CDS_NORESET),
-                IntPtr.Zero);
-
-            device = new DISPLAY_DEVICE();
-            device.cb = Marshal.SizeOf(device);
-            // Apply settings
-            NativeMethods.ChangeDisplaySettingsEx(null, IntPtr.Zero, (IntPtr)null, ChangeDisplaySettingsFlags.CDS_NONE, (IntPtr)null);
-        }
-
-        public static void GetMonitorOffsets()
-        {
-            var device = new DISPLAY_DEVICE();
-            device.cb = Marshal.SizeOf(device);
-            for (uint otherid = 0; NativeMethods.EnumDisplayDevices(null, otherid, ref device, 0); otherid++)
+            var local = (Grid)sender;
+            var monitorIndex = int.Parse(local.Name.Replace("mon_", string.Empty));
+            if (monitorIndex == SelectedMonitor)
             {
-                if (device.StateFlags.HasFlag(DisplayDeviceStateFlags.AttachedToDesktop))
-                {
-                    device.cb = Marshal.SizeOf(device);
-                    var otherDeviceMode = new DEVMODE();
+                monitorIndex = -1;
+                SelectedMonitor = -1;
 
-                    NativeMethods.EnumDisplaySettings(device.DeviceName, -1, ref otherDeviceMode);
-                    MainWindow.Monitors.Add(new Monitor()
-                    {
-                        MonNum = otherid,
-                        Xpos = otherDeviceMode.dmPosition.x,
-                        Ypos = otherDeviceMode.dmPosition.y
-                    });
-                    //Console.WriteLine($"Monitor: {otherid} @ X: {otherDeviceMode.dmPosition.x} Y: {otherDeviceMode.dmPosition.y}");
+            }
+            SelectMonitor(monitorIndex);
+        }
+
+        public void SelectMonitor(int monitorIndex)
+        {
+            Grid local = null;
+            foreach (Grid grid in MonitorCanvas.Children)
+            {
+                var temp = (System.Windows.Shapes.Rectangle)(grid.Children[0]);
+                temp.Fill = new SolidColorBrush(Colors.DarkGray);
+                if (grid.Name == $"mon_{monitorIndex.ToString()}")
+                {
+                    local = grid;
                 }
             }
+            if (local != null)
+            {
+                var rect = (System.Windows.Shapes.Rectangle)local.Children[0];
+                rect.Fill = new SolidColorBrush(Colors.Green);
+                //load values
+                var monitor = Monitors[monitorIndex];
+                SelectedMonitor = monitorIndex;
+                LoadMonitorData(monitor);
+            }
+            else
+                LoadMonitorData(new MonitorModel() { MonNum = SelectedMonitor });
         }
 
-        public static void SetAsPrimaryMonitor(uint id)
+        public void LoadMonitorData(MonitorModel monitor)
         {
-            var device = new DISPLAY_DEVICE();
-            var deviceMode = new DEVMODE();
-            device.cb = Marshal.SizeOf(device);
-
-            NativeMethods.EnumDisplayDevices(null, id, ref device, 0);
-            NativeMethods.EnumDisplaySettings(device.DeviceName, -1, ref deviceMode);
-            var offsetx = deviceMode.dmPosition.x;
-            var offsety = deviceMode.dmPosition.y;
-            Console.WriteLine($"offsetx: {offsetx}");
-            Console.WriteLine($"offsety: {offsety}");
-            deviceMode.dmPosition.x = 0;
-            deviceMode.dmPosition.y = 0;
-
-            NativeMethods.ChangeDisplaySettingsEx(
-                device.DeviceName,
-                ref deviceMode,
-                (IntPtr)null,
-                (ChangeDisplaySettingsFlags.CDS_SET_PRIMARY | ChangeDisplaySettingsFlags.CDS_UPDATEREGISTRY | ChangeDisplaySettingsFlags.CDS_NORESET),
-                IntPtr.Zero);
-
-            device = new DISPLAY_DEVICE();
-            device.cb = Marshal.SizeOf(device);
-
-            // Update remaining devices
-            for (uint otherid = 0; NativeMethods.EnumDisplayDevices(null, otherid, ref device, 0); otherid++)
+            modesCombo.Items.Clear();
+            if (SelectedMonitor >= 0)
             {
-                if (device.StateFlags.HasFlag(DisplayDeviceStateFlags.AttachedToDesktop) && otherid != id)
+                MonNameLabel.Content = "Name: " + monitor.Description;
+                xPosInput.Text = monitor.Xpos.ToString();
+                yPosInput.Text = monitor.Ypos.ToString();
+                foreach (var mode in monitor.Modes)
                 {
-                    device.cb = Marshal.SizeOf(device);
-                    var otherDeviceMode = new DEVMODE();
-
-                    NativeMethods.EnumDisplaySettings(device.DeviceName, -1, ref otherDeviceMode);
-                    Console.WriteLine($"Monitor: {otherid} @ X: {otherDeviceMode.dmPosition.x} Y: {otherDeviceMode.dmPosition.y}");
-                    otherDeviceMode.dmPosition.x -= offsetx;
-                    otherDeviceMode.dmPosition.y -= offsety;
-
-                    NativeMethods.ChangeDisplaySettingsEx(
-                        device.DeviceName,
-                        ref otherDeviceMode,
-                        (IntPtr)null,
-                        (ChangeDisplaySettingsFlags.CDS_UPDATEREGISTRY | ChangeDisplaySettingsFlags.CDS_NORESET),
-                        IntPtr.Zero);
-
+                    modesCombo.Items.Add($"{mode.Width} by {mode.Height} @{mode.Frequency}hz ColorBits: {mode.ColorBits}");
                 }
-
-                device.cb = Marshal.SizeOf(device);
+                modesCombo.SelectedItem = $"{monitor.Width} by {monitor.Height} @{monitor.Frequency}hz ColorBits: {monitor.ColorBits}";
             }
-
-            // Apply settings
-            NativeMethods.ChangeDisplaySettingsEx(null, IntPtr.Zero, (IntPtr)null, ChangeDisplaySettingsFlags.CDS_NONE, (IntPtr)null);
-        }
-
-        [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
-        public struct DEVMODE
-        {
-            public const int CCHDEVICENAME = 32;
-            public const int CCHFORMNAME = 32;
-
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHDEVICENAME)]
-            [System.Runtime.InteropServices.FieldOffset(0)]
-            public string dmDeviceName;
-            [System.Runtime.InteropServices.FieldOffset(32)]
-            public Int16 dmSpecVersion;
-            [System.Runtime.InteropServices.FieldOffset(34)]
-            public Int16 dmDriverVersion;
-            [System.Runtime.InteropServices.FieldOffset(36)]
-            public Int16 dmSize;
-            [System.Runtime.InteropServices.FieldOffset(38)]
-            public Int16 dmDriverExtra;
-            [System.Runtime.InteropServices.FieldOffset(40)]
-            public UInt32 dmFields;
-
-            [System.Runtime.InteropServices.FieldOffset(44)]
-            Int16 dmOrientation;
-            [System.Runtime.InteropServices.FieldOffset(46)]
-            Int16 dmPaperSize;
-            [System.Runtime.InteropServices.FieldOffset(48)]
-            Int16 dmPaperLength;
-            [System.Runtime.InteropServices.FieldOffset(50)]
-            Int16 dmPaperWidth;
-            [System.Runtime.InteropServices.FieldOffset(52)]
-            Int16 dmScale;
-            [System.Runtime.InteropServices.FieldOffset(54)]
-            Int16 dmCopies;
-            [System.Runtime.InteropServices.FieldOffset(56)]
-            Int16 dmDefaultSource;
-            [System.Runtime.InteropServices.FieldOffset(58)]
-            Int16 dmPrintQuality;
-
-            [System.Runtime.InteropServices.FieldOffset(44)]
-            public POINTL dmPosition;
-            [System.Runtime.InteropServices.FieldOffset(52)]
-            public Int32 dmDisplayOrientation;
-            [System.Runtime.InteropServices.FieldOffset(56)]
-            public Int32 dmDisplayFixedOutput;
-
-            [System.Runtime.InteropServices.FieldOffset(60)]
-            public short dmColor; // See note below!
-            [System.Runtime.InteropServices.FieldOffset(62)]
-            public short dmDuplex; // See note below!
-            [System.Runtime.InteropServices.FieldOffset(64)]
-            public short dmYResolution;
-            [System.Runtime.InteropServices.FieldOffset(66)]
-            public short dmTTOption;
-            [System.Runtime.InteropServices.FieldOffset(68)]
-            public short dmCollate; // See note below!
-            [System.Runtime.InteropServices.FieldOffset(72)]
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHFORMNAME)]
-            public string dmFormName;
-            [System.Runtime.InteropServices.FieldOffset(102)]
-            public Int16 dmLogPixels;
-            [System.Runtime.InteropServices.FieldOffset(104)]
-            public Int32 dmBitsPerPel;
-            [System.Runtime.InteropServices.FieldOffset(108)]
-            public Int32 dmPelsWidth;
-            [System.Runtime.InteropServices.FieldOffset(112)]
-            public Int32 dmPelsHeight;
-            [System.Runtime.InteropServices.FieldOffset(116)]
-            public Int32 dmDisplayFlags;
-            [System.Runtime.InteropServices.FieldOffset(116)]
-            public Int32 dmNup;
-            [System.Runtime.InteropServices.FieldOffset(120)]
-            public Int32 dmDisplayFrequency;
-        }
-
-        public enum DISP_CHANGE : int
-        {
-            Successful = 0,
-            Restart = 1,
-            Failed = -1,
-            BadMode = -2,
-            NotUpdated = -3,
-            BadFlags = -4,
-            BadParam = -5,
-            BadDualView = -6
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct DISPLAY_DEVICE
-        {
-            [MarshalAs(UnmanagedType.U4)]
-            public int cb;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-            public string DeviceName;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-            public string DeviceString;
-            [MarshalAs(UnmanagedType.U4)]
-            public DisplayDeviceStateFlags StateFlags;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-            public string DeviceID;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-            public string DeviceKey;
-        }
-
-        [Flags()]
-        public enum DisplayDeviceStateFlags : int
-        {
-            /// <summary>The device is part of the desktop.</summary>
-            AttachedToDesktop = 0x1,
-            MultiDriver = 0x2,
-            /// <summary>The device is part of the desktop.</summary>
-            PrimaryDevice = 0x4,
-            /// <summary>Represents a pseudo device used to mirror application drawing for remoting or other purposes.</summary>
-            MirroringDriver = 0x8,
-            /// <summary>The device is VGA compatible.</summary>
-            VGACompatible = 0x10,
-            /// <summary>The device is removable; it cannot be the primary display.</summary>
-            Removable = 0x20,
-            /// <summary>The device has more display modes than its output devices support.</summary>
-            ModesPruned = 0x8000000,
-            Remote = 0x4000000,
-            Disconnect = 0x2000000,
-        }
-
-        [Flags()]
-        public enum ChangeDisplaySettingsFlags : uint
-        {
-            CDS_NONE = 0,
-            CDS_UPDATEREGISTRY = 0x00000001,
-            CDS_TEST = 0x00000002,
-            CDS_FULLSCREEN = 0x00000004,
-            CDS_GLOBAL = 0x00000008,
-            CDS_SET_PRIMARY = 0x00000010,
-            CDS_VIDEOPARAMETERS = 0x00000020,
-            CDS_ENABLE_UNSAFE_MODES = 0x00000100,
-            CDS_DISABLE_UNSAFE_MODES = 0x00000200,
-            CDS_RESET = 0x40000000,
-            CDS_RESET_EX = 0x20000000,
-            CDS_NORESET = 0x10000000
-        }
-
-        public class NativeMethods
-        {
-            [DllImport("user32.dll")]
-            public static extern DISP_CHANGE ChangeDisplaySettingsEx(string lpszDeviceName, ref DEVMODE lpDevMode, IntPtr hwnd, ChangeDisplaySettingsFlags dwflags, IntPtr lParam);
-
-            [DllImport("user32.dll")]
-            // A signature for ChangeDisplaySettingsEx with a DEVMODE struct as the second parameter won't allow you to pass in IntPtr.Zero, so create an overload
-            public static extern DISP_CHANGE ChangeDisplaySettingsEx(string lpszDeviceName, IntPtr lpDevMode, IntPtr hwnd, ChangeDisplaySettingsFlags dwflags, IntPtr lParam);
-
-            [DllImport("user32.dll")]
-            public static extern bool EnumDisplayDevices(string lpDevice, uint iDevNum, ref DISPLAY_DEVICE lpDisplayDevice, uint dwFlags);
-
-            [DllImport("user32.dll")]
-            public static extern bool EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINTL
-        {
-            public int x;
-            public int y;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //save that shit
-            foreach (var m in Monitors)
+            else
             {
-                SetMonitorOffsets(m.MonNum, m.Xpos, m.Ypos);
+                MonNameLabel.Content = string.Empty;
             }
+        }
+
+        public int posOffset(int canv, int pos) => (int)canv / 2 + pos;
+
+        public void RefreshCanvas()
+        {
+            MonitorCanvas.Children.Clear();
+            Monitors = GetMonitorOffsets();
+            var totalWidth = Monitors[0].Width;
+            var totalHeight = Monitors[0].Height;
+            var xOffset = 0;
+            var yOffset = 0;
+            foreach (var monitor in Monitors)
+            {
+                totalWidth += Math.Abs(monitor.Xpos);
+                totalHeight += Math.Abs(monitor.Ypos);
+                if (monitor.Xpos < 0)
+                    xOffset += Math.Abs(monitor.Xpos);
+                if (monitor.Ypos < 0)
+                    yOffset += Math.Abs(monitor.Ypos);
+            }
+            foreach (var monitor in Monitors)
+            {
+                System.Windows.Shapes.Rectangle rect;
+                rect = new System.Windows.Shapes.Rectangle();
+                rect.Stroke = new SolidColorBrush(Colors.Black);
+                rect.Fill = new SolidColorBrush(Colors.DarkGray);
+                rect.Width = Convert.ToDouble(monitor.Width / Zoom);
+                rect.Height = Convert.ToDouble(monitor.Height / Zoom);
+
+                Grid grid = new Grid();
+                var prePosX = monitor.Xpos - totalWidth/2;
+                var prePosY = monitor.Ypos - totalHeight/2;
+                var baseWidth = Convert.ToDouble((prePosX+xOffset) / Zoom);
+                var baseHeight = Convert.ToDouble((prePosY+yOffset) / Zoom);
+                var canvWidth = (MonitorCanvas.ActualWidth / 2);
+                var canvHeight = (MonitorCanvas.ActualHeight / 2);
+
+                var xPos = baseWidth+canvWidth;
+                var yPos = baseHeight+canvHeight;
+
+                Canvas.SetLeft(grid, xPos);
+                Canvas.SetTop(grid, yPos);
+
+                grid.Children.Add(rect);
+                TextBlock textblock = new TextBlock();
+                var primaryString = monitor.Primary ? "PRIMARY\r\n" : String.Empty;
+                textblock.Text = $"{primaryString}Name: {monitor.Description}\r\n" + (monitor.MonNum + 1).ToString() + $": {monitor.Width}X{monitor.Height}@{monitor.Frequency}hz\r\nX: {monitor.Xpos} Y: {monitor.Ypos}\r\nGPU: {monitor.GPU}";
+                textblock.HorizontalAlignment = HorizontalAlignment.Center;
+                textblock.VerticalAlignment = VerticalAlignment.Center;
+                textblock.FontSize = 120/Zoom;
+                grid.Children.Add(textblock);
+                grid.Name = "mon_" + monitor.MonNum.ToString();
+                grid.MouseUp += Grid_MouseUp;
+                MonitorCanvas.Children.Add(grid);
+            }
+            if (SelectedMonitor >= 0)
+            {
+                SelectMonitor(SelectedMonitor);
+            }
+        }
+
+        //helpers
+        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
+        private static bool IsTextAllowed(string text)
+        {
+            return !_regex.IsMatch(text);
+        }
+
+        //events
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            RefreshCanvas();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            RefreshCanvas();
+        }
+
+        private void zoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Zoom = (int)e.NewValue;
+            RefreshCanvas();
+        }
+
+        private void MonitorCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+                zoomSlider.Value++;
+
+            else if (e.Delta < 0)
+                zoomSlider.Value--;
+        }
+
+        private void numeric_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextAllowed(e.Text);
+        }
+
+        private void setbutton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedMonitor >= 0)
+            {
+                var monitor = Monitors[SelectedMonitor];
+                if (monitor.Primary && (int.Parse(xPosInput.Text) != 0 || int.Parse(yPosInput.Text) != 0))
+                {
+                    MonNameLabel.Content = "Primary monitor is always at 0x0 offset. Can not update position.";
+                    return;
+                }
+                var selectedMode = modesCombo.SelectedValue.ToString();
+                var modeValsRaw = selectedMode.Split(' ');
+                //$"{monitor.Width} by {monitor.Height} @{monitor.Frequency}hz ColorBits: {monitor.ColorBits}";
+                var newMode = new MonitorModes() { 
+                    Width = int.Parse(modeValsRaw[0]),
+                    Height = int.Parse(modeValsRaw[2]),
+                    Frequency = int.Parse(modeValsRaw[3].Replace("@",string.Empty).Replace("hz", string.Empty)),
+                    ColorBits = int.Parse(modeValsRaw[5])
+                };
+                SetMonitorOffsets(monitor.InternalId, int.Parse(xPosInput.Text), int.Parse(yPosInput.Text));
+                SetMonitorMode(monitor.InternalId, newMode);
+            }
+            else
+                MonNameLabel.Content = "No monitor was selected, numbnuts";
+            RefreshCanvas();
+        }
+
+        private void modesCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //set new mode here
         }
     }
 }
