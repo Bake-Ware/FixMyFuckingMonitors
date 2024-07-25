@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "es2RaTdnoglkYhhRF3dF1j7V5x+EU9eoPTZhJzjVhyCRubL38rlc/xT4EiQknqqUo7x3/biRRKHQWbcoerJ1hA==",
+  "dgSpecHash": "cdcBZssVBxE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\123\\Documents\\GitHub\\FixMyFuckingMonitors\\FixMyFuckingMonitors\\FixMyFuckingMonitors.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\source\\FixMyFuckingMonitors\\FixMyFuckingMonitors\\FixMyFuckingMonitors.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jamix\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.19\\microsoft.netcore.app.ref.7.0.19.nupkg.sha512",
+    "C:\\Users\\jamix\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.19\\microsoft.windowsdesktop.app.ref.7.0.19.nupkg.sha512",
+    "C:\\Users\\jamix\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.19\\microsoft.aspnetcore.app.ref.7.0.19.nupkg.sha512",
+    "C:\\Users\\jamix\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.19\\microsoft.netcore.app.host.win-x64.7.0.19.nupkg.sha512"
+  ],
   "logs": []
 }

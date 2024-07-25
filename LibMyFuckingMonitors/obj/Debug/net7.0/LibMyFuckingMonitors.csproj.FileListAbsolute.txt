@@ -10,3 +10,15 @@ C:\Users\123\Documents\GitHub\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debu
 C:\Users\123\Documents\GitHub\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\refint\LibMyFuckingMonitors.dll
 C:\Users\123\Documents\GitHub\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.pdb
 C:\Users\123\Documents\GitHub\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\ref\LibMyFuckingMonitors.dll
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\bin\Debug\net7.0\LibMyFuckingMonitors.deps.json
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\bin\Debug\net7.0\LibMyFuckingMonitors.dll
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\bin\Debug\net7.0\LibMyFuckingMonitors.pdb
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.GeneratedMSBuildEditorConfig.editorconfig
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.AssemblyInfoInputs.cache
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.AssemblyInfo.cs
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.csproj.CoreCompileInputs.cache
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.sourcelink.json
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.dll
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\refint\LibMyFuckingMonitors.dll
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\LibMyFuckingMonitors.pdb
+C:\source\FixMyFuckingMonitors\LibMyFuckingMonitors\obj\Debug\net7.0\ref\LibMyFuckingMonitors.dll
